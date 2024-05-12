@@ -7,13 +7,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserSchema } from 'src/users/users.model';
 import { UsersService } from 'src/users/users.service';
-import { LocalStrategy } from './local.auth';
+import { LocalStretagy } from './local.auth';
 // import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports:[
     UsersModule,
-    PassportModule.register({defaultStrategy:'jwt'}),
+    PassportModule.register({defaultStrategy:'local'}),
     JwtModule.register(
       {
         secret:process.env.JWT_SECRET || 'defaultSecret',
@@ -23,6 +23,6 @@ import { LocalStrategy } from './local.auth';
     MongooseModule.forFeature([{name:'User', schema:UserSchema}])
   ],
   controllers: [AuthController],
-  providers: [AuthService,UsersService,LocalStrategy],
+  providers: [AuthService,UsersService,LocalStretagy],
 })
 export class AuthModule {}

@@ -5,7 +5,6 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
-import { PassportModule } from '@nestjs/passport';
 dotenv.config();
 
 @Module({
@@ -13,7 +12,6 @@ dotenv.config();
     MongooseModule.forRoot('mongodb://localhost/authentication'),
     UsersModule,
     AuthModule,
-    PassportModule
   ],
   controllers: [AppController],
   providers: [AppService],

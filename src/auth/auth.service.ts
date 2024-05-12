@@ -1,31 +1,37 @@
-import { Injectable, NotAcceptableException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import * as bcrypt from 'bcrypt';
+import { LoginDto } from './dto/login.dto';
+import * as bcrypt from 'bcrypt'; 
+import { JwtService } from '@nestjs/jwt';
+import { PayloadType } from './dto/payload.type';
+
 @Injectable()
 export class AuthService {
-    constructor(private  readonly userService:UsersService, private jwtService:JwtService){}
+    constructor(
+        private userService : UsersService,
+        private jwtService:JwtService,
+    ){}
 
-    async validateUser(email:string,password:string) : Promise<any>{
-        const user = await this.userService.getUser({email:email});
+    async login(loginDto:LoginDto) : Promise<{accessToken:string}>{
+        const user = await this.userService.getUser({email:loginDto.email});
+        console.log(user);
+        const passwordEncode=await bcrypt.compare(
+            loginDto.password,user.password
+        );
 
-        if(!user) return null;
-        const passwordValid = await bcrypt.compare(password,user.password);
-        if(!user)
-        {
-            throw new NotAcceptableException("could not find user");
+        if(passwordEncode){
+            delete user.password;
+            // return user;
+           
+            const payload: PayloadType =  {email:user.email};
+
+            return {
+                accessToken:this.jwtService.sign(payload),
+            }
         }
-        if(user && passwordValid)
-        {
-            return user;
-        }
-        return null;
-    }
-
-    async login(user:any){
-        const payload={userEmail:user.email,sub:user._id};
-        return{
-            access_token:this.jwtService.signAsync(payload),
+        else {
+            throw new UnauthorizedException("Password does not match");
         }
     }
 }
