@@ -21,6 +21,9 @@ export class User {
   @Prop({ required: true })
   password: string;
 
+  @Prop({default:false})
+  isAdmin:boolean;
+
   // async hashPassword(){
   //   this.password=await bcrypt.hash(this.password,10);
   // }

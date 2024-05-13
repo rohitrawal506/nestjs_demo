@@ -23,9 +23,8 @@ export class AuthService {
         if(passwordEncode){
             delete user.password;
             // return user;
-           
-            const payload: PayloadType =  {email:user.email};
-
+            const payload: PayloadType =  {email:user.email,age:user.age,isAdmin:user.isAdmin};
+            console.log(payload);
             return {
                 accessToken:this.jwtService.sign(payload),
             }
@@ -34,4 +33,6 @@ export class AuthService {
             throw new UnauthorizedException("Password does not match");
         }
     }
+
+    
 }
