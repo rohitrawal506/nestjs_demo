@@ -5,9 +5,11 @@ import { UsersModule } from 'src/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/entities/users.entity';
 import { JwtModule } from '@nestjs/jwt';
-import  {Constants}  from './constants';
 import { JwtStretagy } from './jwt.streategy';
 import { ArtistsModule } from 'src/artists/artists.module';
+import {config as dotenvConfig} from  'dotenv';
+
+dotenvConfig({ path: '.env' });
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { ArtistsModule } from 'src/artists/artists.module';
     TypeOrmModule.forFeature([User]),
     JwtModule.register(
       {
-        secret:Constants.secret,
+        secret:`${process.env.SECRET_KEY}`,
         signOptions:{
           expiresIn:'1d',
         }
