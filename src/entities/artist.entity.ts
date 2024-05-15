@@ -2,7 +2,7 @@ import { Entity, JoinColumn, ManyToMany, OneToOne, PrimaryGeneratedColumn } from
 import { User} from "./users.entity";
 import { Song } from "./song.entity";
 
-@Entity()
+@Entity('artist')
 export class Artist{
     @PrimaryGeneratedColumn()
     id : number;

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Matches} from "class-validator";
 
 export class CreateUserDto{
     @IsString()
@@ -16,4 +16,7 @@ export class CreateUserDto{
     @IsString()
     @IsNotEmpty()
     password: string;
+
+    @Matches(/^[0-9]{10}$/, { message: 'Phone number must be 10 digits long' })
+    phoneNumber: string;
 }

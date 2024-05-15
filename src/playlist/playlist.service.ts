@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PlayList } from '../entities/playlist.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository} from 'typeorm';
 import { User } from '../entities/users.entity';
 import { Song } from 'src/entities/song.entity';
 import { CreatePlayListDto } from '../dto/create-playlist.dto';
-import { addSongInPlayList } from 'src/dto/add-song-in-playlist';
+// import { addSongInPlayList } from 'src/dto/add-song-in-playlist';
 
 @Injectable()
 export class PlaylistService {
@@ -32,38 +32,60 @@ export class PlaylistService {
 
     }
 
-    async addSong(addSongDto: addSongInPlayList): Promise<UpdateResult> {
-        const playList = await this.playlistRepository.findOneBy({ id: addSongDto.id });
-
-        console.log(playList);
-      
-        if (!playList) {
-          throw new Error("PlayList Not Found");
-        }
-      
-        const songs: Song[] = playList.songs;
-
-        console.log(songs);
-
-        const song = await this.songRepository.findOneBy({ id: addSongDto.songId });
-        console.log(song);
-
-        if (!song) {
-          throw new Error("Song not found");
-        }
-      
-        const foundSong = songs.find(s => s.id === song.id);
-        console.log("FoundSong....");
-        console.log(foundSong);
-      
-        if (foundSong) {
-          throw new Error("Song is already in the Playlist");
-        }
-      
-        playList.songs.push(song);
-      
-        return await this.playlistRepository.update(addSongDto.id, { songs: playList.songs });
+    async addSongToPlaylist(playlistId: number, songId: number): Promise<PlayList> {
+      const playlist = await this.findById(playlistId);
+      const song = await this.songRepository.findOne({where:{id:songId}});
+      if (!playlist || !song) {
+          throw new Error('Playlist or Song not found');
       }
+
+      playlist.songs.push(song);
+      await this.playlistRepository.save(playlist);
+
+      return playlist;
+  }
+    // async addSong(addSongDto: addSongInPlayList): Promise<PlayList> {
+    //     const playList = await this.findById(addSongDto.id);
+
+        // console.log(addSongDto);
+      
+        // if (!playList) {
+        //   throw new Error("PlayList Not Found");
+        // }
+      
+        // const songs: Song[] = playList.songs;
+
+        // console.log(songs);
+
+        // const song = await this.songRepository.findOneBy({ id: addSongDto.songId });
+        // console.log(song);
+
+        // if (!song) {
+        //   throw new Error("Song not found");
+        // }
+      
+        // const foundSong = songs.find(s => s.id === song.id);
+        // console.log("FoundSong....");
+        // console.log(foundSong);
+      
+        // if (foundSong) {
+        //   throw new Error("Song is already in the Playlist");
+        // }
+      
+        // playList.songs.push(song);
+      
+        // return await this.playlistRepository.update(addSongDto.id, { songs: playList.songs });
+      //   return playList;
+      // }
+
+      async findById(id:number) : Promise<PlayList>{
+        return this.playlistRepository
+                   .createQueryBuilder('playList')
+                   .leftJoinAndSelect('playList.user','user')
+                   .leftJoinAndSelect('playList.songs','songs')
+                   .where('playList.id = :id',{id})
+                   .getOne()
+    }
       
 
 }

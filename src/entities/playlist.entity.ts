@@ -19,7 +19,7 @@ export class PlayList{
     )
     user : User;
 
-    @ManyToMany(()=>Song,(song)=>song.playLists)
+    @ManyToMany(()=>Song,(song)=>song.playLists,)
     @JoinTable(
         {
             name:'playlist_song',
@@ -28,4 +28,6 @@ export class PlayList{
         }
     )
     songs : Song[];
+
+    
 }

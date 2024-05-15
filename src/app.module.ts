@@ -7,10 +7,10 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ArtistsModule } from './artists/artists.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-// import { dataSourceOptions } from 'data-source';
+// import { dataSourceOptions } from '../db/data-source';
 import { DataSource } from 'typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import typeorm from './config/typeorm';
+import typeorm from '../db/data-source';
 
 @Module({
   imports: [
