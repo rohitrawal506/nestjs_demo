@@ -8,7 +8,7 @@ export class Artist{
     id : number;
 
     @OneToOne(()=>User)
-    @JoinColumn({name:'userId',referencedColumnName:'id'})
+    @JoinColumn({name:'user_id',referencedColumnName:'id'})
     user : User;
 
     @ManyToMany(()=>Song,(song)=>song.artists)

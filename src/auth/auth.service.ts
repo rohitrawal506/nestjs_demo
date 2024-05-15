@@ -5,6 +5,8 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { ArtistsService } from 'src/artists/artists.service';
 import { PayloadType } from 'src/types/payload.type';
+import { CreateUserDto } from 'src/dto/create-user.dto';
+import { User } from 'src/entities/users.entity';
 
 
 @Injectable()
@@ -40,6 +42,10 @@ export class AuthService {
         else {
             throw new UnauthorizedException("Password does not match");
         }
+    }
+
+    async signup(createUserDto : CreateUserDto) : Promise<User>{
+        return this.userService.createUser(createUserDto);
     }
 
 }

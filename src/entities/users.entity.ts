@@ -7,10 +7,10 @@ export class User{
     @PrimaryGeneratedColumn()
     id:number;
 
-    @Column()
+    @Column({name:"firstname"})
     firstName : string;
 
-    @Column()
+    @Column({name:"lastname"})
     lastName : string;
 
     @Column({unique:true})
@@ -23,7 +23,7 @@ export class User{
     @OneToMany(()=>PlayList,(playlist)=>playlist.user)
     playLists : PlayList[];
 
-    @Column()
+    @Column({name:"phone_number"})
     phoneNumber: string;
     
 }
